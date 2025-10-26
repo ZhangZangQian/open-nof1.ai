@@ -1,33 +1,26 @@
 # Dockerfile for the Next.js application in development mode
-FROM oven/bun:1
+FROM oven/bun:1-slim
 
-# Install OpenSSL and other dependencies for Prisma
-RUN apt-get update -y && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Copy package files first to leverage Docker cache
 COPY package.json bun.lockb* ./
 
-# Install dependencies with legacy peer deps to avoid conflicts
-RUN bun install --legacy-peer-deps
+# Install dependencies
+RUN bun install
 
-# Copy Prisma schema
+# Copy Prisma schema and generated client
 COPY prisma ./prisma/
-
-# Set Prisma environment variables for better compatibility
-ENV PRISMA_CLIENT_ENGINE_TYPE="binary"
-ENV PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK=true
-
-# Install Prisma CLI and generate client with error handling
-RUN bun add -d prisma @prisma/client && \
-    echo "Generating Prisma Client..." && \
-    bunx prisma generate || \
-    (echo "Prisma generate failed, trying with npx..." && npx prisma generate)
+COPY node_modules/.prisma ./node_modules/.prisma/
 
 # Copy the rest of the application
 COPY . .
 
+# Set environment variables for cross-platform compatibility
+ENV PRISMA_CLIENT_ENGINE_TYPE="binary"
 ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3000
