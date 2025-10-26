@@ -12,6 +12,7 @@
     "@ai-sdk/deepseek": "^1.0.23",
     "@ai-sdk/openai-compatible": "^1.0.22",
     "@openrouter/ai-sdk-provider": "^1.2.0",
+    "qwen-ai-provider": "^0.1.1",
     "@radix-ui/react-slot": "^1.2.3",
     "ai": "^5.0.76",
     "ccxt": "^4.5.11",

@@ -2,7 +2,7 @@ import { generateObject } from "ai";
 import { generateUserPrompt, tradingPrompt } from "./prompt";
 import { getCurrentMarketState } from "../trading/current-market-state";
 import { z } from "zod";
-import { deepseekR1 } from "./model";
+import { qwenMax } from "./model";
 import { getAccountInformationAndPerformance } from "../trading/account-information-and-performance";
 import { prisma } from "../prisma";
 import { Opeartion, Symbol } from "@prisma/client";
@@ -24,8 +24,10 @@ export async function run(initialCapital: number) {
     invocationCount,
   });
 
+  // 使用类型断言解决模型类型不匹配问题
   const { object, reasoning } = await generateObject({
-    model: deepseekR1,
+    // @ts-ignore
+    model: qwenMax as any,
     system: tradingPrompt,
     prompt: userPrompt,
     output: "object",
