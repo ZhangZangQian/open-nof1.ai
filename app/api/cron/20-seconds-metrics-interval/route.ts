@@ -49,7 +49,7 @@ export const GET = async (request: NextRequest) => {
 
   let existMetrics = await prisma.metrics.findFirst({
     where: {
-      model: ModelType.Deepseek,
+      model: ModelType.Qwen,
     },
   });
 
@@ -58,7 +58,7 @@ export const GET = async (request: NextRequest) => {
       data: {
         name: "20-seconds-metrics",
         metrics: [],
-        model: ModelType.Deepseek,
+        model: ModelType.Qwen,
       },
     });
   }

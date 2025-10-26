@@ -5,7 +5,7 @@ import { z } from "zod";
 import { qwenMax } from "./model";
 import { getAccountInformationAndPerformance } from "../trading/account-information-and-performance";
 import { prisma } from "../prisma";
-import { Opeartion, Symbol } from "@prisma/client";
+import { ModelType, Opeartion, Symbol } from "@prisma/client";
 
 /**
  * you can interval trading using cron job
@@ -78,6 +78,7 @@ export async function run(initialCapital: number) {
   if (object.opeartion === Opeartion.Buy) {
     await prisma.chat.create({
       data: {
+        model: ModelType.Qwen,
         reasoning: reasoning || "<no reasoning>",
         chat: object.chat || "<no chat>",
         userPrompt,
@@ -99,6 +100,7 @@ export async function run(initialCapital: number) {
   if (object.opeartion === Opeartion.Sell) {
     await prisma.chat.create({
       data: {
+        model: ModelType.Qwen,
         reasoning: reasoning || "<no reasoning>",
         chat: object.chat || "<no chat>",
         userPrompt,
@@ -119,6 +121,7 @@ export async function run(initialCapital: number) {
       object.adjustProfit?.stopLoss && object.adjustProfit?.takeProfit;
     await prisma.chat.create({
       data: {
+        model: ModelType.Qwen,
         reasoning: reasoning || "<no reasoning>",
         chat: object.chat || "<no chat>",
         userPrompt,

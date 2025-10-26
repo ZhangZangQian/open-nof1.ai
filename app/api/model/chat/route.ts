@@ -1,27 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { ModelType } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
-export const GET = async (request: NextRequest) => {
-  const chat = await prisma.chat.findMany({
-    where: {
-      model: ModelType.Deepseek,
-    },
-    take: 10,
+export const GET = async () => {
+  const data = await prisma.chat.findMany({
     orderBy: {
       createdAt: "desc",
     },
     include: {
-      tradings: {
-        take: 10,
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
+      tradings: true,
     },
+    take: 20,
   });
 
-  return NextResponse.json({
-    data: chat,
+  return Response.json({
+    data: data.map((item: any) => ({
+      ...item,
+      model: item.model || ModelType.Qwen,
+    })),
   });
 };
